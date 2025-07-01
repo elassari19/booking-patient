@@ -121,21 +121,21 @@
   - [x] Add certification upload endpoints
   - [x] Create bio and experience fields
 
-- [ ] **Profile Endpoints**
+- [x] **Profile Endpoints**
 
-  - [ ] GET /profile - Get user profile
-  - [ ] PUT /profile - Update profile
-  - [ ] POST /profile/upload - Upload files
-  - [ ] GET /practitioners - List practitioners
-  - [ ] PUT /availability - Update availability
+  - [x] GET /profile - Get user profile
+  - [x] PUT /profile - Update profile
+  - [x] POST /profile/upload - Upload files
+  - [x] GET /practitioners - List practitioners
+  - [x] PUT /availability - Update availability
 
-- [ ] **Admin Features**
+- [x] **Admin Features**
 
-  - [ ] Create user list screen
-  - [ ] Implement user search and filters
-  - [ ] Create user approval system
-  - [ ] Add user status management
-  - [ ] Implement user deletion/suspension
+  - [x] Create user list screen
+  - [x] Implement user search and filters
+  - [x] Create user approval system
+  - [x] Add user status management
+  - [x] Implement user deletion/suspension
 
 - [ ] **Admin Endpoints**
   - [ ] GET /admin/users - List all users
