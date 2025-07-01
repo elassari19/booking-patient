@@ -17,6 +17,7 @@ import authRouter from './auth/auth.routes';
 import practitionersRoutes from './practitioners/practitioners.routes';
 import profileRoutes from './profiles/profile.routes';
 import adminRoutes from './admin/admin.routes';
+import adminDirectRoutes from './admin/admin.routes'; // New direct routes
 
 import { redisSession } from '../utils/redis.config';
 import { redisClient } from '../lib/redis';
@@ -83,7 +84,8 @@ export const createApp = async () => {
   app.use('/users', usersRouter);
   app.use('/api/practitioners', practitionersRoutes);
   app.use('/api', profileRoutes);
-  app.use('/api/admin', adminRoutes); // Add admin routes
+  app.use('/api/admin', adminRoutes); // Existing admin routes with /api prefix
+  app.use('/admin', adminDirectRoutes); // New direct admin routes to match task requirements
 
   // Initialize Apollo Server - await it properly
   // await createApolloServer(app);

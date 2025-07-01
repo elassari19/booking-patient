@@ -137,11 +137,11 @@
   - [x] Add user status management
   - [x] Implement user deletion/suspension
 
-- [ ] **Admin Endpoints**
-  - [ ] GET /admin/users - List all users
-  - [ ] PUT /admin/users/:id/status - Update user status
-  - [ ] DELETE /admin/users/:id - Delete user
-  - [ ] GET /admin/stats - User statistics
+- [x] **Admin Endpoints**
+  - [x] GET /admin/users - List all users
+  - [x] PUT /admin/users/:id/status - Update user status
+  - [x] DELETE /admin/users/:id - Delete user
+  - [x] GET /admin/stats - User statistics
 
 ---
 
