@@ -51,7 +51,7 @@ model User {
   lastName        String
   password        String
   role            UserRole   @default(PATIENT)
-  status          UserStatus @default(ACTIVE) // Added missing status field
+  status          UserStatus @default(ACTIVE)
   isEmailVerified Boolean    @default(false)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
@@ -79,7 +79,7 @@ model PatientProfile {
   // Personal Information
   dateOfBirth  DateTime?
   gender       Gender?
-  phoneNumber  String?
+  phone        String?   // Changed from phoneNumber to phone
   profileImage String?
 
   // Address
@@ -123,7 +123,7 @@ model PractitionerProfile {
   profileImage    String?
 
   // Contact Information
-  phoneNumber String?
+  phone String? // Changed from phoneNumber to phone for consistency
 
   // Financial Information
   consultationFee Float @default(0)
@@ -145,7 +145,7 @@ model PractitionerProfile {
   availability Availability[]
 
   // Time slots for booking
-  timeSlots    TimeSlot[]
+  timeSlots TimeSlot[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -162,7 +162,7 @@ model AdminProfile {
   department   String?
   permissions  String[] // Array of permission strings
   profileImage String?
-  phoneNumber  String?
+  phone        String?  // Changed from phoneNumber to phone for consistency
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -220,7 +220,7 @@ model Availability {
 
 model Subscription {
   id       String @id @default(cuid())
-  userId   String @unique // Add @unique here
+  userId   String @unique
   planType String
   status   String
   createdAt DateTime @default(now())

@@ -157,21 +157,21 @@
   - [x] Create booking relationships
   - [x] Run Prisma migrations
 
-- [ ] **Frontend Calendar Components**
+- [x] **Frontend Calendar Components**
 
-  - [ ] Create monthly calendar view
-  - [ ] Implement time slot booking
-  - [ ] Create availability display
-  - [ ] Add booking confirmation modal
-  - [ ] Implement recurring booking option
+  - [x] Create monthly calendar view
+  - [x] Implement time slot booking
+  - [x] Create availability display
+  - [x] Add booking confirmation modal
+  - [x] Implement recurring booking option
 
-- [ ] **Backend Booking Endpoints**
+- [x] **Backend Booking Endpoints**
 
-  - [ ] POST /bookings - Create booking
-  - [ ] GET /bookings - List user bookings
-  - [ ] PUT /bookings/:id/status - Update booking status
-  - [ ] DELETE /bookings/:id - Cancel booking
-  - [ ] GET /availability/:practitionerId - Get availability
+  - [x] POST /bookings - Create booking
+  - [x] GET /bookings - List user bookings
+  - [x] PUT /bookings/:id/status - Update booking status
+  - [x] DELETE /bookings/:id - Cancel booking
+  - [x] GET /availability/:practitionerId - Get availability
 
 - [ ] **Frontend Booking Management**
 

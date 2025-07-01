@@ -27,7 +27,7 @@ export default function BookingsScreen() {
   const selectedPractitionerName = 'Dr. John Smith';
 
   const {
-    data: bookings = [],
+    data: bookingsResponse,
     isLoading: bookingsLoading,
     refetch: refetchBookings,
   } = useGetBookingsQuery();
@@ -39,6 +39,8 @@ export default function BookingsScreen() {
   } = useGetPractitionerAvailabilityQuery(selectedPractitionerId, {
     skip: !selectedPractitionerId,
   });
+
+  const bookings = bookingsResponse?.data || [];
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
