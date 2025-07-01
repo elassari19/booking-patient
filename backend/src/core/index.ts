@@ -17,8 +17,9 @@ import authRouter from './auth/auth.routes';
 import practitionersRoutes from './practitioners/practitioners.routes';
 import profileRoutes from './profiles/profile.routes';
 import adminRoutes from './admin/admin.routes';
-import adminDirectRoutes from './admin/admin.routes'; // New direct routes
-import bookingRoutes from './bookings/booking.routes'; // Add this import
+import adminDirectRoutes from './admin/admin.routes';
+import bookingRoutes from './bookings/booking.routes';
+import sessionRoutes from './sessions/session.routes'; // Add this import
 
 import { redisSession } from '../utils/redis.config';
 import { redisClient } from '../lib/redis';
@@ -35,34 +36,25 @@ export const createApp = async () => {
     console.log('✅ Database connected successfully');
   } catch (error) {
     console.error('❌ Database connection failed:', error);
+    throw error;
   }
 
-  app.use(
-    helmet({
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        directives: {
-          imgSrc: [
-            `'self'`,
-            'data:',
-            'apollo-server-landing-page.cdn.apollographql.com',
-          ],
-          scriptSrc: [`'self'`, `https: 'unsafe-inline'`],
-          manifestSrc: [
-            `'self'`,
-            'apollo-server-landing-page.cdn.apollographql.com',
-          ],
-          frameSrc: [`'self'`, 'sandbox.embed.apollographql.com'],
-        },
-      },
-    })
-  );
-  app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
-  app.use(morgan('common'));
-  app.use(bodyParser.json({ limit: '50mb' })); // Increased limit for screenshots
-  app.use(bodyParser.urlencoded({ extended: false }));
+  // Test Redis connection
+  try {
+    await redisClient.ping();
+    console.log('✅ Redis connected successfully');
+  } catch (error) {
+    console.error('❌ Redis connection failed:', error);
+    throw error;
+  }
 
-  // CORS configuration - remove the previous app.use(cors()) call
+  // Middleware
+  app.use(helmet());
+  app.use(morgan('combined'));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  // CORS configuration
   app.use(
     cors({
       origin: process.env.FRONTEND_URL || 'http://localhost:3000',
@@ -85,13 +77,10 @@ export const createApp = async () => {
   app.use('/users', usersRouter);
   app.use('/api/practitioners', practitionersRoutes);
   app.use('/api', profileRoutes);
-  app.use('/api/admin', adminRoutes); // Existing admin routes with /api prefix
-  app.use('/admin', adminDirectRoutes); // New direct admin routes to match task requirements
-  app.use('/api/bookings', bookingRoutes); // Add this line
-
-  // Initialize Apollo Server - await it properly
-  // await createApolloServer(app);
-  // console.log('GraphQL server initialized');
+  app.use('/api/admin', adminRoutes);
+  app.use('/admin', adminDirectRoutes);
+  app.use('/api/bookings', bookingRoutes);
+  app.use('/api/sessions', sessionRoutes); // Add this line
 
   // Root route should be defined before error handlers
   app.get('/', async (req, res) => {
@@ -99,8 +88,7 @@ export const createApp = async () => {
       // Test database connection
       await prisma.$queryRaw`SELECT 1`;
       res.json({
-        message:
-          'Greetings from scrapper backend! Visit /graphql to access the GraphQL playground.',
+        message: 'Patient Booking Backend API',
         database: 'Connected to PostgreSQL',
         timestamp: new Date().toISOString(),
       });

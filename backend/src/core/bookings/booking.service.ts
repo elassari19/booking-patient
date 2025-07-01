@@ -6,6 +6,7 @@ import type {
   BookingWithRelations,
   PaginatedResponse,
 } from '../../types/booking';
+import { sessionService } from '../sessions/session.service';
 
 export class BookingService {
   // Create a new booking
@@ -322,6 +323,13 @@ export class BookingService {
         session: true,
       },
     });
+
+    // Create session when booking is confirmed
+    if (updateData.status === 'CONFIRMED' && !updatedBooking.session) {
+      await sessionService.createSession({
+        bookingId: updatedBooking.id,
+      });
+    }
 
     // Update session status if booking is cancelled
     if (updateData.status === 'CANCELLED') {

@@ -173,20 +173,20 @@
   - [x] DELETE /bookings/:id - Cancel booking
   - [x] GET /availability/:practitionerId - Get availability
 
-- [.] **Frontend Booking Management**
+- [x] **Frontend Booking Management**
 
-  - [.] Create booking request screen
-  - [.] Implement booking approval flow
-  - [.] Create session details screen
-  - [.] Add booking cancellation
-  - [.] Implement rescheduling feature
+  - [x] Create booking request screen
+  - [x] Implement booking approval flow
+  - [x] Create session details screen
+  - [x] Add booking cancellation
+  - [x] Implement rescheduling feature
 
-- [ ] **Backend Session Management**
+- [x] **Backend Session Management**
 
-  - [ ] GET /sessions - List sessions
-  - [ ] POST /sessions/:id/notes - Add session notes
-  - [ ] POST /sessions/:id/rating - Rate session
-  - [ ] GET /sessions/:id/details - Session details
+  - [x] GET /sessions - List sessions
+  - [x] POST /sessions/:id/notes - Add session notes
+  - [x] POST /sessions/:id/rating - Rate session
+  - [x] GET /sessions/:id/details - Session details
 
 - [ ] **Frontend Session History**
   - [ ] Create past sessions list
