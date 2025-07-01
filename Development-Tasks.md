@@ -149,13 +149,13 @@
 
 #### Frontend & Backend (Full Stack Implementation)
 
-- [ ] **Database Models (Prisma)**
+- [x] **Database Models (Prisma)**
 
-  - [ ] Create Booking model
-  - [ ] Create TimeSlot model
-  - [ ] Create Session model
-  - [ ] Create booking relationships
-  - [ ] Run Prisma migrations
+  - [x] Create Booking model
+  - [x] Create TimeSlot model
+  - [x] Create Session model
+  - [x] Create booking relationships
+  - [x] Run Prisma migrations
 
 - [ ] **Frontend Calendar Components**
 

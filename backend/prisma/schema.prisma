@@ -23,6 +23,27 @@ enum UserStatus {
   INACTIVE
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+enum SessionStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SessionType {
+  VIDEO_CALL
+  IN_PERSON
+  PHONE_CALL
+}
+
 model User {
   id              String     @id @default(cuid())
   email           String     @unique
@@ -42,6 +63,10 @@ model User {
 
   // Other relationships
   subscription Subscription?
+
+  // Booking relationships
+  patientBookings      Booking[] @relation("PatientBookings")
+  practitionerBookings Booking[] @relation("PractitionerBookings")
 
   @@map("users")
 }
@@ -118,6 +143,9 @@ model PractitionerProfile {
 
   // Availability
   availability Availability[]
+
+  // Time slots for booking
+  timeSlots    TimeSlot[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -201,6 +229,102 @@ model Subscription {
   user User @relation(fields: [userId], references: [id])
 
   @@map("subscriptions")
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  patientId      String
+  practitionerId String
+  
+  // Booking details
+  bookingDate    DateTime      // The date and time of the booking
+  duration       Int           @default(60) // Duration in minutes
+  sessionType    SessionType   @default(VIDEO_CALL)
+  status         BookingStatus @default(PENDING)
+  
+  // Pricing
+  fee            Float         @default(0)
+  
+  // Notes and details
+  patientNotes   String?       // Notes from patient when booking
+  practitionerNotes String?    // Notes from practitioner
+  
+  // Cancellation details
+  cancelledAt    DateTime?
+  cancelledBy    String?       // User ID who cancelled
+  cancellationReason String?
+  
+  // Relationships
+  patient        User          @relation("PatientBookings", fields: [patientId], references: [id], onDelete: Cascade)
+  practitioner   User          @relation("PractitionerBookings", fields: [practitionerId], references: [id], onDelete: Cascade)
+  
+  // Related session
+  session        Session?
+  
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  
+  @@map("bookings")
+}
+
+model Session {
+  id           String        @id @default(cuid())
+  bookingId    String        @unique
+  booking      Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  // Session details
+  status       SessionStatus @default(SCHEDULED)
+  startedAt    DateTime?
+  endedAt      DateTime?
+  actualDuration Int?        // Actual duration in minutes
+  
+  // Session content
+  notes        String?       // Session notes from practitioner
+  diagnosis    String?       // Diagnosis or findings
+  prescription String?       // Prescribed medications or treatments
+  followUpDate DateTime?     // Next appointment recommendation
+  
+  // Video call details (if applicable)
+  roomId       String?       // Video room ID
+  recordingUrl String?       // Recording URL if recorded
+  
+  // Ratings and feedback
+  patientRating      Int?    // 1-5 rating from patient
+  practitionerRating Int?    // 1-5 rating from practitioner
+  patientFeedback    String? // Patient feedback
+  practitionerFeedback String? // Practitioner feedback
+  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  @@map("sessions")
+}
+
+model TimeSlot {
+  id             String              @id @default(cuid())
+  practitionerId String
+  practitioner   PractitionerProfile @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  
+  // Time slot details
+  date           DateTime            // The specific date
+  startTime      String              // "09:00"
+  endTime        String              // "10:00"
+  isAvailable    Boolean             @default(true)
+  isRecurring    Boolean             @default(false)
+  
+  // Recurring details (if applicable)
+  recurringType  String?             // "weekly", "daily", etc.
+  recurringUntil DateTime?           // End date for recurring slots
+  
+  // Booking reference (if booked)
+  isBooked       Boolean             @default(false)
+  bookingId      String?             // Reference to booking if this slot is taken
+  
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  
+  @@unique([practitionerId, date, startTime])
+  @@map("time_slots")
 }
 
 enum Gender {
