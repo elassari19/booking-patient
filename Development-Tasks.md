@@ -114,12 +114,12 @@
   - [x] Create AdminProfile model
   - [x] Run Prisma migrations
 
-- [ ] **Practitioner Features**
+- [x] **Practitioner Features**
 
-  - [ ] Create Availability model
-  - [ ] Create Specialization model
-  - [ ] Add certification upload endpoints
-  - [ ] Create bio and experience fields
+  - [x] Create Availability model
+  - [x] Create Specialization model
+  - [x] Add certification upload endpoints
+  - [x] Create bio and experience fields
 
 - [ ] **Profile Endpoints**
 
