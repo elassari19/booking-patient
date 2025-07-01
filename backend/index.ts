@@ -8,11 +8,12 @@ const PORT = process.env.PORT || 3001;
 
 async function startServer() {
   try {
-    const app = await createApp();
+    const { app, httpServer, socketServer } = await createApp();
 
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+      console.log(`🔄 Socket.IO ready for real-time messaging`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

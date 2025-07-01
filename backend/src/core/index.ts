@@ -1,4 +1,5 @@
 import express from 'express';
+import { createServer } from 'http';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -7,6 +8,7 @@ import morgan from 'morgan';
 import passport from 'passport';
 import { errorHandler, notFoundHandler } from './errors';
 import { prisma } from '../lib/prisma';
+import { initializeSocketServer } from './socket/socket.server';
 
 // Import passport configuration
 import './auth/passport.config';
@@ -19,7 +21,7 @@ import profileRoutes from './profiles/profile.routes';
 import adminRoutes from './admin/admin.routes';
 import adminDirectRoutes from './admin/admin.routes';
 import bookingRoutes from './bookings/booking.routes';
-import sessionRoutes from './sessions/session.routes'; // Add this import
+import sessionRoutes from './sessions/session.routes';
 
 import { redisSession } from '../utils/redis.config';
 import { redisClient } from '../lib/redis';
@@ -27,6 +29,10 @@ import { redisClient } from '../lib/redis';
 export const createApp = async () => {
   /* CONFIGURATIONS */
   const app = express();
+
+  // Create HTTP server for Socket.IO
+  const httpServer = createServer(app);
+
   app.use(express.json());
   app.use(cookieParser());
 
@@ -72,6 +78,10 @@ export const createApp = async () => {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  // Initialize Socket.IO server
+  const socketServer = initializeSocketServer(httpServer);
+  console.log('✅ Socket.IO server initialized');
+
   // Routes
   app.use('/auth', authRouter);
   app.use('/users', usersRouter);
@@ -80,7 +90,7 @@ export const createApp = async () => {
   app.use('/api/admin', adminRoutes);
   app.use('/admin', adminDirectRoutes);
   app.use('/api/bookings', bookingRoutes);
-  app.use('/api/sessions', sessionRoutes); // Add this line
+  app.use('/api/sessions', sessionRoutes);
 
   // Root route should be defined before error handlers
   app.get('/', async (req, res) => {
@@ -90,6 +100,7 @@ export const createApp = async () => {
       res.json({
         message: 'Patient Booking Backend API',
         database: 'Connected to PostgreSQL',
+        realtime: 'Socket.IO Ready',
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
@@ -115,5 +126,5 @@ export const createApp = async () => {
     console.log('Database disconnected');
   });
 
-  return app;
+  return { app, httpServer, socketServer };
 };
