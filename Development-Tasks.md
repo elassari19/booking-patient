@@ -173,13 +173,13 @@
   - [x] DELETE /bookings/:id - Cancel booking
   - [x] GET /availability/:practitionerId - Get availability
 
-- [ ] **Frontend Booking Management**
+- [.] **Frontend Booking Management**
 
-  - [ ] Create booking request screen
-  - [ ] Implement booking approval flow
-  - [ ] Create session details screen
-  - [ ] Add booking cancellation
-  - [ ] Implement rescheduling feature
+  - [.] Create booking request screen
+  - [.] Implement booking approval flow
+  - [.] Create session details screen
+  - [.] Add booking cancellation
+  - [.] Implement rescheduling feature
 
 - [ ] **Backend Session Management**
 

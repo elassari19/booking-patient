@@ -1,6 +1,28 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Types matching your backend
+// Add Session interface
+export interface Session {
+  id: string;
+  bookingId: string;
+  status: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  startedAt?: string;
+  endedAt?: string;
+  actualDuration?: number;
+  notes?: string;
+  diagnosis?: string;
+  prescription?: string;
+  followUpDate?: string;
+  roomId?: string;
+  recordingUrl?: string;
+  patientRating?: number;
+  practitionerRating?: number;
+  patientFeedback?: string;
+  practitionerFeedback?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Updated Booking interface with session
 export interface Booking {
   id: string;
   patientId: string;
@@ -12,6 +34,9 @@ export interface Booking {
   fee: number;
   patientNotes?: string;
   practitionerNotes?: string;
+  cancelledAt?: string;
+  cancelledBy?: string;
+  cancellationReason?: string;
   createdAt: string;
   updatedAt: string;
 
@@ -20,6 +45,10 @@ export interface Booking {
     firstName: string;
     lastName: string;
     email: string;
+    patientProfile?: {
+      profileImage?: string;
+      phone?: string;
+    };
   };
   practitioner?: {
     id: string;
@@ -29,8 +58,10 @@ export interface Booking {
     practitionerProfile?: {
       specializations: string[];
       profileImage?: string;
+      bio?: string;
     };
   };
+  session?: Session; // Add session property
 }
 
 export interface TimeSlot {
