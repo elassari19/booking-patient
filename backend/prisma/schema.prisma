@@ -1,0 +1,216 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PATIENT
+  PRACTITIONER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  INACTIVE
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  firstName       String
+  lastName        String
+  password        String
+  role            UserRole @default(PATIENT)
+  isEmailVerified Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Profile relationships
+  patientProfile      PatientProfile?
+  practitionerProfile PractitionerProfile?
+  adminProfile        AdminProfile?
+
+  // Other relationships
+  subscription       Subscription?
+  
+  @@map("users")
+}
+
+model PatientProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personal Information
+  dateOfBirth DateTime?
+  gender      Gender?
+  phoneNumber String?
+  profileImage String?
+  
+  // Address
+  street   String?
+  city     String?
+  state    String?
+  zipCode  String?
+  country  String?
+  
+  // Emergency Contact
+  emergencyContactName         String?
+  emergencyContactRelationship String?
+  emergencyContactPhone        String?
+  
+  // Medical Information
+  medicalHistory String[] // Array of conditions
+  allergies      String[] // Array of allergies
+  medications    String[] // Array of current medications
+  
+  // Insurance Information
+  insuranceProvider   String?
+  insurancePolicyNumber String?
+  insuranceGroupNumber  String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("patient_profiles")
+}
+
+model PractitionerProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Professional Information
+  licenseNumber     String   @unique
+  specializations   String[] // Array of specializations
+  bio               String?
+  experience        Int      @default(0) // Years of experience
+  profileImage      String?
+  
+  // Contact Information
+  phoneNumber String?
+  
+  // Financial Information
+  consultationFee Float @default(0)
+  
+  // Languages
+  languages String[] // Array of languages spoken
+  
+  // Verification Status
+  verificationStatus VerificationStatus @default(PENDING)
+  verificationDocuments String[] // Array of document URLs
+  
+  // Education
+  education Education[]
+  
+  // Certifications
+  certifications Certification[]
+  
+  // Availability
+  availability Availability[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("practitioner_profiles")
+}
+
+model AdminProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Admin Information
+  department    String?
+  permissions   String[] // Array of permission strings
+  profileImage  String?
+  phoneNumber   String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("admin_profiles")
+}
+
+model Education {
+  id            String              @id @default(cuid())
+  practitionerId String
+  practitioner  PractitionerProfile @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  
+  degree      String
+  institution String
+  year        Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("education")
+}
+
+model Certification {
+  id            String              @id @default(cuid())
+  practitionerId String
+  practitioner  PractitionerProfile @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  
+  name       String
+  issuer     String
+  issueDate  DateTime
+  expiryDate DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("certifications")
+}
+
+model Availability {
+  id            String              @id @default(cuid())
+  practitionerId String
+  practitioner  PractitionerProfile @relation(fields: [practitionerId], references: [id], onDelete: Cascade)
+  
+  dayOfWeek   Int     // 0-6 (Sunday-Saturday)
+  startTime   String  // "09:00"
+  endTime     String  // "17:00"
+  isAvailable Boolean @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([practitionerId, dayOfWeek])
+  @@map("availability")
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique  // Add @unique here
+  planType  String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("subscriptions")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
