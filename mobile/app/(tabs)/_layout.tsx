@@ -7,8 +7,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useAppSelector } from '@/hooks/redux';
-import { selectCurrentUser } from '@/store/slices/authSlice';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -22,7 +20,6 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
@@ -64,6 +61,19 @@ export default function TabLayout() {
               name={
                 focused ? 'list.bullet.clipboard.fill' : 'list.bullet.clipboard'
               }
+              size={28}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="sessions"
+        options={{
+          title: 'Sessions',
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              name={focused ? 'doc.text.fill' : 'doc.text'}
               size={28}
               color={color}
             />

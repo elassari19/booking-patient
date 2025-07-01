@@ -19,13 +19,14 @@ import appSlice from './slices/appSlice';
 
 // Import API
 import { apiSlice } from './api/apiSlice';
+import { sessionApi } from './api/sessionApi'; // Add this import
 
 const persistConfig = {
   key: 'root',
   version: 1,
   storage: AsyncStorage,
-  whitelist: ['auth', 'user'], // Only persist auth and user data
-  blacklist: ['api'], // Don't persist API cache
+  whitelist: ['auth', 'user'],
+  blacklist: ['api', 'sessionApi'], // Don't persist API cache
 };
 
 const rootReducer = combineReducers({
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   user: userSlice,
   app: appSlice,
   api: apiSlice.reducer,
+  sessionApi: sessionApi.reducer, // Add this line
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -44,18 +46,17 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(apiSlice.middleware),
+    }).concat(
+      apiSlice.middleware,
+      sessionApi.middleware // Add this line
+    ),
   devTools: __DEV__,
 });
 
 export const persistor = persistStore(store);
 
-// Setup listeners for RTK Query
 setupListeners(store.dispatch);
 
-// Export types with proper handling of persisted state
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
-// Type for the persisted state (used in selectors)
 export type PersistedRootState = ReturnType<typeof persistedReducer>;
