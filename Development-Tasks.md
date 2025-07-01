@@ -188,12 +188,12 @@
   - [x] POST /sessions/:id/rating - Rate session
   - [x] GET /sessions/:id/details - Session details
 
-- [ ] **Frontend Session History**
-  - [ ] Create past sessions list
-  - [ ] Implement session details view
-  - [ ] Add session rating/review
-  - [ ] Create session notes display
-  - [ ] Add session export feature
+- [x] **Frontend Session History**
+  - [x] Create past sessions list
+  - [x] Implement session details view
+  - [x] Add session rating/review
+  - [x] Create session notes display
+  - [x] Add session export feature
 
 ---
 
@@ -201,13 +201,13 @@
 
 #### Frontend & Backend (Full Stack Implementation)
 
-- [ ] **Database Models (Prisma)**
+- [x] **Database Models (Prisma)**
 
-  - [ ] Create Message model
-  - [ ] Create Conversation model
-  - [ ] Create MessageAttachment model
-  - [ ] Setup message relationships
-  - [ ] Run Prisma migrations
+  - [x] Create Message model
+  - [x] Create Conversation model
+  - [x] Create MessageAttachment model
+  - [x] Setup message relationships
+  - [x] Run Prisma migrations
 
 - [ ] **Real-time Setup**
 
